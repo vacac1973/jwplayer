@@ -14,18 +14,11 @@ const aliases = {
 
 webpackConfig.resolve.alias = Object.assign(webpackConfig.resolve.alias || {}, aliases);
 
-webpackConfig.module.rules = [{
+webpackConfig.module.rules.push({
     test: /\.js$/,
     include: /(src)\/(js)\//,
     loader: 'istanbul-instrumenter-loader'
-}];
-
-webpackConfig.module.postLoaders = [{
-    test: /\.js$/,
-    include: /(src)\/(js)\//,
-    exclude: /(test|node_modules)\//,
-    loader: 'istanbul-instrumenter-loader'
-}];
+});
 
 module.exports = function(config) {
     var env = process.env;
@@ -118,9 +111,6 @@ module.exports = function(config) {
                     __BUILD_VERSION__: '\'' + '7.10.0' + '\'',
                     __FLASH_VERSION__: 18.0
                 }),
-            ],
-            noParse: [
-                /node_modules\/sinon\//
             ]
         },
         // number of browsers to run at once
