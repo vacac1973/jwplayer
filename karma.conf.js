@@ -11,8 +11,20 @@ const aliases = {
     data: path.resolve(__dirname + '/test/data'),
     mock: path.resolve(__dirname + '/test/mock')
 };
+const rules = [{
+    enforce: 'post',
+    test: /\.js$/,
+    include: /(src)\/(js)\//,
+    loader: 'istanbul-instrumenter-loader'
+}];
+const noParse = [
+    /node_modules\/sinon\//,
+    /node_modules\/jquery\//
+];
 
 webpackConfig.resolve.alias = Object.assign(webpackConfig.resolve.alias || {}, aliases);
+webpackConfig.module.rules = rules.concat(webpackConfig.module.rules || []);
+webpackConfig.module.noParse = noParse.concat(webpackConfig.module.noParse || []);
 
 webpackConfig.module.rules.push({
     test: /\.js$/,
@@ -97,7 +109,6 @@ module.exports = function(config) {
         },
 
         webpack: {
-            umdNamedDefine: webpackConfig.umdNamedDefine,
             resolve: webpackConfig.resolve,
             module: webpackConfig.module,
             plugins: [
