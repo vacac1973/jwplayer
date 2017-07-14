@@ -1,15 +1,15 @@
 import { qualityLevel } from 'providers/data-normalizer';
+import { IDLE, PAUSED, LOADING } from 'events/states';
 
 define([
     'utils/helpers',
     'utils/underscore',
     'events/events',
-    'events/states',
     'utils/embedswf',
     'providers/default',
     'utils/backbone.events',
     'providers/tracks-mixin'
-], function(utils, _, events, states, EmbedSwf, DefaultProvider, Events, Tracks) {
+], function(utils, _, events, EmbedSwf, DefaultProvider, Events, Tracks) {
     var _providerId = 0;
     function getObjectId(playerId) {
         return playerId + '_swf_' + (_providerId++);
@@ -110,7 +110,7 @@ define([
             },
             load: function(item) {
                 _item = item;
-                this.setState(states.LOADING);
+                this.setState(LOADING);
                 _flashCommand('load', item);
                     // HLS mediaType comes from the AdaptiveProvider
                 if (item.sources.length && item.sources[0].type !== 'hls') {
@@ -122,14 +122,14 @@ define([
             },
             pause: function() {
                 _flashCommand('pause');
-                this.setState(states.PAUSED);
+                this.setState(PAUSED);
             },
             stop: function() {
                 _flashCommand('stop');
                 _currentQuality = -1;
                 _item = null;
                 this.clearTracks();
-                this.setState(states.IDLE);
+                this.setState(IDLE);
             },
             seek: function(seekPos) {
                 _flashCommand('seek', seekPos);
@@ -243,7 +243,7 @@ define([
 
                 _swf.on(events.JWPLAYER_PLAYER_STATE, function(e) {
                     var state = e.newstate;
-                    if (state === states.IDLE) {
+                    if (state === IDLE) {
                         return;
                     }
                     this.setState(state);

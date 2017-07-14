@@ -5,12 +5,12 @@ import getVisibility from 'view/utils/visibility';
 import activeTab from 'utils/active-tab';
 import { requestAnimationFrame, cancelAnimationFrame } from 'utils/request-animation-frame';
 import { getBreakpoint, setBreakpoint } from 'view/utils/breakpoint';
+import { BUFFERING, IDLE, COMPLETE, PAUSED, PLAYING, ERROR } from 'events/states';
 
 let ControlsModule;
 
 define([
     'events/events',
-    'events/states',
     'utils/backbone.events',
     'utils/helpers',
     'utils/underscore',
@@ -22,7 +22,7 @@ define([
     'view/preview',
     'view/title',
     'controller/controls-loader',
-], function(events, states, Events, utils, _, requestFullscreenHelper, flagNoFocus,
+], function(events, Events, utils, _, requestFullscreenHelper, flagNoFocus,
             ClickHandler, CaptionsRenderer, Logo, Preview, Title, ControlsLoader) {
 
     const _styles = utils.style;
@@ -487,11 +487,11 @@ define([
                     const controls = _model.get('controls');
 
                     if (controls &&
-                        ((state === states.IDLE || state === states.COMPLETE) ||
-                        (_instreamModel && _instreamModel.get('state') === states.PAUSED))) {
+                        ((state === IDLE || state === COMPLETE) ||
+                        (_instreamModel && _instreamModel.get('state') === PAUSED))) {
                         api.play(reasonInteraction());
                     }
-                    if (controls && state === states.PAUSED) {
+                    if (controls && state === PAUSED) {
                         // Toggle visibility of the controls when tapping the media
                         // Do not add mobile toggle "jw-flag-controls-hidden" in these cases
                         if (_instreamModel ||
@@ -579,7 +579,7 @@ define([
             }
 
             controls.on('userActive userInactive', function() {
-                if (_playerState === states.PLAYING || _playerState === states.BUFFERING) {
+                if (_playerState === PLAYING || _playerState === BUFFERING) {
                     _captionsRenderer.renderCues(true);
                 }
             });
@@ -803,21 +803,21 @@ define([
         }
 
         function _stateUpdate(state) {
-            if (_model.get('controls') && state !== states.PAUSED && utils.hasClass(_playerElement, 'jw-flag-controls-hidden')) {
+            if (_model.get('controls') && state !== PAUSED && utils.hasClass(_playerElement, 'jw-flag-controls-hidden')) {
                 utils.removeClass(_playerElement, 'jw-flag-controls-hidden');
             }
             utils.replaceClass(_playerElement, /jw-state-\S+/, 'jw-state-' + state);
 
             // Update captions renderer
             switch (state) {
-                case states.IDLE:
-                case states.ERROR:
-                case states.COMPLETE:
+                case IDLE:
+                case ERROR:
+                case COMPLETE:
                     _captionsRenderer.hide();
                     break;
                 default:
                     _captionsRenderer.show();
-                    if (state === states.PAUSED && _controls && !_controls.showing) {
+                    if (state === PAUSED && _controls && !_controls.showing) {
                         _captionsRenderer.renderCues(true);
                     }
                     break;

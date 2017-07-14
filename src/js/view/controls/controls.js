@@ -1,6 +1,5 @@
 define([
     'events/events',
-    'events/states',
     'utils/backbone.events',
     'utils/constants',
     'utils/helpers',
@@ -14,7 +13,7 @@ define([
     'view/controls/next-display-icon',
     'view/controls/nextuptooltip',
     'view/controls/rightclick',
-], function (events, states, Events, Constants, utils, _, button, Controlbar, Dock,
+], function (events, Events, Constants, utils, _, button, Controlbar, Dock,
              DisplayContainer, RewindDisplayIcon, PlayDisplayIcon, NextDisplayIcon,
              NextUpToolTip, RightClick) {
 

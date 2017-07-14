@@ -1,3 +1,5 @@
+import { IDLE, COMPLETE, PAUSED, PLAYING } from 'events/states';
+
 define([
     'utils/helpers',
     'providers/providers',
@@ -5,9 +7,8 @@ define([
     'utils/underscore',
     'utils/backbone.events',
     'utils/simplemodel',
-    'events/events',
-    'events/states'
-], function(utils, Providers, QOE, _, Events, SimpleModel, events, states) {
+    'events/events'
+], function(utils, Providers, QOE, _, Events, SimpleModel, events) {
 
     // Represents the state of the player
     var Model = function() {
@@ -32,7 +33,7 @@ define([
                 itemMeta: {},
                 playlistItem: undefined,
                 // Initial state, upon setup
-                state: states.IDLE,
+                state: IDLE,
                 // Initially we don't assume Flash is needed
                 flashBlocked: false,
                 provider: undefined,
@@ -163,8 +164,8 @@ define([
                     break;
                 case 'autoplayFailed':
                     this.set('autostartFailed', true);
-                    if (mediaModel.get('state') === states.PLAYING) {
-                        mediaModel.set('state', states.PAUSED);
+                    if (mediaModel.get('state') === PLAYING) {
+                        mediaModel.set('state', PAUSED);
                     }
                     break;
                 default:
@@ -275,7 +276,7 @@ define([
 
         this.playbackComplete = function() {
             _beforecompleted = false;
-            _provider.setState(states.COMPLETE);
+            _provider.setState(COMPLETE);
             this.mediaController.trigger(events.JWPLAYER_MEDIA_COMPLETE, {});
         };
 
@@ -517,7 +518,7 @@ define([
 
     // Represents the state of the provider/media element
     var MediaModel = Model.MediaModel = function() {
-        this.set('state', states.IDLE);
+        this.set('state', IDLE);
     };
 
     _.extend(Model.prototype, SimpleModel);

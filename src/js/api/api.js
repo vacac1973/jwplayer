@@ -1,17 +1,17 @@
 import instances from 'api/players';
+import { PLAYING, BUFFERING } from 'events/states';
 
 define([
     'api/timer',
     'controller/controller',
     'plugins/plugins',
     'events/events',
-    'events/states',
     'utils/backbone.events',
     'utils/helpers',
     'utils/underscore',
     'version'
 ], function(Timer, Controller, plugins,
-            events, states, Events, utils, _, version) {
+            events, Events, utils, _, version) {
 
     let instancesCreated = 0;
 
@@ -688,8 +688,8 @@ define([
 
                 state = this.getState();
                 switch (state) {
-                    case states.PLAYING:
-                    case states.BUFFERING:
+                    case PLAYING:
+                    case BUFFERING:
                         _controller.pause(meta);
                         break;
                     default:
